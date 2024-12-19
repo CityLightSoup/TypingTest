@@ -6,7 +6,7 @@ export const Results = () => {
         navigate('/');
     }
     const location = useLocation();
-    const { totalInputs, correctInputs } = location.state || {};
+    const { totalInputs, correctInputs, elapsedTime } = location.state || {};
 
     return (
         <>
@@ -14,6 +14,12 @@ export const Results = () => {
             <p>totalInputs : {totalInputs}</p>
             <p>correctInputs : {correctInputs}</p>
             <p>accuracy : {Math.round((correctInputs / totalInputs) * 1000)/10}%</p>
+            <p>
+                Time : {" "}
+                {Math.floor(elapsedTime / 600000)}:
+                {Math.floor((elapsedTime % 600000) / 1000).toString().padStart(2, "0")}:
+                {Math.floor((elapsedTime % 1000) / 10).toString().padStart(2, "0")}
+            </p>
             <button onClick={handleHome}>to Home</button>
         </>
 

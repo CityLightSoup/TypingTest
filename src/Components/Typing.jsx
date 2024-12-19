@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState, useRef} from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { Stopwatch } from "./Stopwatch";
 
 export const Typing = () => {
     const targetStrings = ["apple", "banana", "orange"]; //入力させる文字列
@@ -9,49 +10,51 @@ export const Typing = () => {
     const [countTyping, setCountTyping] = useState(0); //入力回数
     const [countCorectTyping, setCountCorrectTyping] = useState(0); //正しく入力した回数
     const [correct, setCorrect] = useState(true); //入力した文字が合っているかどうか
+    const divRef = useRef(null); //タイピングのdivタグにフォーカスするやつ
+    const [time, setTime] = useState(0); //計測時間
     //react-router-dom
     const navigate = useNavigate();
     const handleHome = () => {
         navigate('/');
     }
+    const { state } = useLocation(); //Homeから値を受け取る
+    const [isTyping, setIsTyping] = useState(state?.isTyping || false); //初期値をstateに設定
 
     //targetStringsに格納した文字列をすべて入力し終えたらResultsに遷移。それまではtargetに次の文字列をセットする
     useEffect(() => {
         if (targetStrings.length > targetIndex) {
             setTarget(targetStrings[targetIndex]);
         } else { //総タイプ数と正しいタイプ数をリザルト画面に送る（あとは時間）
-            navigate('/Results', {state: {totalInputs: countTyping, correctInputs: countCorectTyping}});
+            navigate('/Results', {
+                state: {
+                    totalInputs: countTyping, 
+                    correctInputs: countCorectTyping,
+                    elapsedTime: time
+                }});
         }
-    }, [targetIndex, targetStrings, navigate]);
+    }, [targetIndex, targetStrings, navigate, time]);
 
-    // const Typing = (event) => {
-    //     //押された回数をカウント
-    //     setCountTyping(countTyping + 1);
-    //     const key = event.key;
-    //     console.log("----------\n if the input is correct? : " + correct);
-    //     console.log("a current correct word is : " + target[correctWordsIndex]);
-    //     console.log("the index of correct words : " + correctWordsIndex + "\n----------");
-    //     //押したキーが正しかったらCorrectWodsIndexを+1する
-    //     if (target[correctWordsIndex] === key) {
-    //         setCorrectWordsIndex(correctWordsIndex + 1);
-    //         setCountCorrectTyping(countCorectTyping + 1);
-    //         setCorrect(true);
-    //     } else { //押したキーが間違っていたとき
-    //         setCorrect(false);
-    //     }
-    //     //すべて入力されたら次の文字列にする
-    //     if (target.length - 1 === correctWordsIndex) {
-    //         setTargetIndex(targetIndex + 1);
-    //         console.log(targetIndex);
-    //         setCorrectWordsIndex(0);
-    //     }
-    // };
+    useEffect(() => {
+        if (divRef.current) {
+            divRef.current.focus();
+        }
+    }, []);
+
+    const handleKeyDown = (event) => {
+        const key = event.key;
+        if(!isTyping && key === ' ') {
+            setIsTyping(true);
+            event.preventDefault();
+        } else {
+            Typing(event);
+        }
+    }
 
     const Typing = (event) => {
         const key = event.key;
-        console.log("----------\n if the input is correct? : " + correct);
-        console.log("a current correct word is : " + target[correctWordsIndex]);
-        console.log("the index of correct words : " + correctWordsIndex + "\n----------");
+        // console.log("----------\n if the input is correct? : " + correct);
+        // console.log("a current correct word is : " + target[correctWordsIndex]);
+        // console.log("the index of correct words : " + correctWordsIndex + "\n----------");
     
         //タイプ数のカウント
         setCountTyping((prev) => prev + 1);
@@ -74,7 +77,7 @@ export const Typing = () => {
 
     return (
         <>
-            <div tabIndex={0} onKeyDown={Typing}>
+            <div ref={divRef} tabIndex={0} onKeyDown={handleKeyDown} style={{ outline: "none" }}>
                 <h1>Typing</h1>
                 <div style={{borderWidth:"5px", borderStyle:"solid", borderColor: correct ? "white" : "red"}}>
                     {target && target.split("").map((char, index) => (//targetがundefineでないことを確認
@@ -86,6 +89,7 @@ export const Typing = () => {
                         </span>
                     ))}
                 </div>
+                <Stopwatch isTyping={isTyping} onTimeUpdate={setTime}/>
             </div>
             <button onClick={handleHome}>to Home</button>
         </>
