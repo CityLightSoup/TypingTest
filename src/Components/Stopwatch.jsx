@@ -21,24 +21,24 @@ export const Stopwatch = (props) => {
         return () => clearInterval(interval);
     }, [isRunning]);
 
-    const handleStart = () => setIsRunning(true);
-    const handleStop = () => setIsRunning(false);
-    const handleReset = () => {
-        setIsRunning(false);
-        setTime(0);
-    }
+    // const handleStart = () => setIsRunning(true);
+    // const handleStop = () => setIsRunning(false);
+    // const handleReset = () => {
+    //     setIsRunning(false);
+    //     setTime(0);
+    // }
 
     return (
         <>
-            <h1>Stopwatch</h1>
-            <p>
-                {Math.floor(time / 60000)};
-                {Math.floor((time % 60000) / 1000).toString().padStart(2, "0")};
+            <h1>Time</h1>
+            <p style={{ fontSize: "40px" }}>
+                {Math.floor(time / 60000)}:
+                {Math.floor((time % 60000) / 1000).toString().padStart(2, "0")}:
                 {Math.floor((time % 1000) / 10).toString().padStart(2, "0")}
             </p>
-            <button onClick={handleStart}>Start</button>
+            {/* <button onClick={handleStart}>Start</button>
             <button onClick={handleStop}>Stop</button>
-            <button onClick={handleReset}>Reset</button>
+            <button onClick={handleReset}>Reset</button> */}
         </>
         
     )

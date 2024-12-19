@@ -83,7 +83,7 @@ export const Typing = () => {
                     {target && target.split("").map((char, index) => (//targetがundefineでないことを確認
                         <span
                             key={index}
-                            style={{ color: correctWordsIndex > index ? "gray" : "blue" }}
+                            style={{ color: correctWordsIndex > index ? "gray" : "blue",  fontSize: "50px" }}
                         >
                             {char}
                         </span>
