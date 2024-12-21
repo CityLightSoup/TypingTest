@@ -12,6 +12,7 @@ export const Typing = () => {
     const [correct, setCorrect] = useState(true); //入力した文字が合っているかどうか
     const divRef = useRef(null); //タイピングのdivタグにフォーカスするやつ
     const [time, setTime] = useState(0); //計測時間
+    const [showBorder, setShowBorder] = useState(false); //タイプミス時のボーダー表示
     //react-router-dom
     const navigate = useNavigate();
     const handleHome = () => {
@@ -34,11 +35,20 @@ export const Typing = () => {
         }
     }, [targetIndex, targetStrings, navigate, time]);
 
+    //タイピングされるdivタグに着目するためのもの
     useEffect(() => {
         if (divRef.current) {
             divRef.current.focus();
         }
     }, []);
+
+    //ミスタイプ時のアラート表示
+    useEffect(() => {
+        if (!correct && showBorder) {
+            const timer = setTimeout(() => setShowBorder(false), 100);
+            return () => clearTimeout(timer);
+        }
+    }, [correct, showBorder]);
 
     const handleKeyDown = (event) => {
         const key = event.key;
@@ -66,6 +76,7 @@ export const Typing = () => {
             setCorrect(true);
         } else {
             setCorrect(false);
+            setShowBorder(true);
         }
     
         //すべて入力されたら次の文字列にする
@@ -79,7 +90,7 @@ export const Typing = () => {
         <>
             <div ref={divRef} tabIndex={0} onKeyDown={handleKeyDown} style={{ outline: "none" }}>
                 <h1>Typing</h1>
-                <div style={{borderWidth:"5px", borderStyle:"solid", borderColor: correct ? "white" : "red"}}>
+                <div style={{borderWidth:"5px", borderStyle:"solid", borderColor:showBorder ? "red" : "white", transition: "border-color 0.1s"}}>
                     {target && target.split("").map((char, index) => (//targetがundefineでないことを確認
                         <span
                             key={index}
