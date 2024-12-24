@@ -1,6 +1,8 @@
-import { useEffect, useState, useRef} from "react";
+import { useEffect, useState, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Stopwatch } from "./Stopwatch";
+
+import { Sound } from "./Sound";
 
 export const Typing = () => {
     const targetStrings = ["apple", "banana", "orange"]; //入力させる文字列
@@ -13,6 +15,7 @@ export const Typing = () => {
     const divRef = useRef(null); //タイピングのdivタグにフォーカスするやつ
     const [time, setTime] = useState(0); //計測時間
     const [showBorder, setShowBorder] = useState(false); //タイプミス時のボーダー表示
+    const soundRef = useRef(); //音を鳴らす
     //react-router-dom
     const navigate = useNavigate();
     const handleHome = () => {
@@ -28,10 +31,11 @@ export const Typing = () => {
         } else { //総タイプ数と正しいタイプ数をリザルト画面に送る（あとは時間）
             navigate('/Results', {
                 state: {
-                    totalInputs: countTyping, 
+                    totalInputs: countTyping,
                     correctInputs: countCorectTyping,
                     elapsedTime: time
-                }});
+                }
+            });
         }
     }, [targetIndex, targetStrings, navigate, time]);
 
@@ -52,7 +56,10 @@ export const Typing = () => {
 
     const handleKeyDown = (event) => {
         const key = event.key;
-        if(!isTyping && key === ' ') {
+        if (soundRef.current) {
+            soundRef.current.playSound();
+        }
+        if (!isTyping && key === ' ') {
             setIsTyping(true);
             event.preventDefault();
         } else {
@@ -65,10 +72,10 @@ export const Typing = () => {
         // console.log("----------\n if the input is correct? : " + correct);
         // console.log("a current correct word is : " + target[correctWordsIndex]);
         // console.log("the index of correct words : " + correctWordsIndex + "\n----------");
-    
+
         //タイプ数のカウント
         setCountTyping((prev) => prev + 1);
-    
+
         //押されたキーが正しかったらindexを1増やす
         if (target[correctWordsIndex] === key) {
             setCorrectWordsIndex((prev) => prev + 1);
@@ -78,7 +85,7 @@ export const Typing = () => {
             setCorrect(false);
             setShowBorder(true);
         }
-    
+
         //すべて入力されたら次の文字列にする
         if (correctWordsIndex + 1 === target.length && target[correctWordsIndex] === key) {
             setTargetIndex((prev) => prev + 1);
@@ -88,19 +95,20 @@ export const Typing = () => {
 
     return (
         <>
+            <Sound ref={soundRef} />
             <div ref={divRef} tabIndex={0} onKeyDown={handleKeyDown} style={{ outline: "none" }}>
                 <h1>Typing</h1>
-                <div style={{borderWidth:"5px", borderStyle:"solid", borderColor:showBorder ? "red" : "white", transition: "border-color 0.1s"}}>
+                <div style={{ borderWidth: "5px", borderStyle: "solid", borderColor: showBorder ? "red" : "white", transition: "border-color 0.1s" }}>
                     {target && target.split("").map((char, index) => (//targetがundefineでないことを確認
                         <span
                             key={index}
-                            style={{ color: correctWordsIndex > index ? "gray" : "blue",  fontSize: "50px" }}
+                            style={{ color: correctWordsIndex > index ? "gray" : "blue", fontSize: "50px" }}
                         >
                             {char}
                         </span>
                     ))}
                 </div>
-                <Stopwatch isTyping={isTyping} onTimeUpdate={setTime}/>
+                <Stopwatch isTyping={isTyping} onTimeUpdate={setTime} />
             </div>
             <button onClick={handleHome}>to Home</button>
         </>
