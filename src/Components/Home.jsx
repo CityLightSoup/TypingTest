@@ -1,6 +1,23 @@
 import { useEffect } from "react";
 import { useRef } from "react";
 import { useNavigate } from "react-router-dom"
+/** @jsxImportSource @emotion/react */
+import { css } from "@emotion/react";
+
+//css in JS
+const Font = css({
+    fontFamily:"Arial"
+})
+
+const Title = css({
+    textAlign:"center",
+    margin:"24px"
+})
+
+const Body = css({
+    textAlign:"center",
+    margin: "24px"
+})
 
 export const Home = () => {
     const navigate = useNavigate();
@@ -33,8 +50,8 @@ export const Home = () => {
                 onKeyDown={handleKeyDown}
                 style={{ outline: "none" }} //ォーカス時の枠線を非表示
             >
-                <h1>HOME</h1>
-                <p>スペースキーを押したらスタート</p>
+                <h1 css={[Font, Title]}>HOME</h1>
+                <p css={Body}>スペースキーを押したらスタート</p>
                 {/* <button onClick={handleTyping}>to Typing</button>
                 <button onClick={handleStopwatch}>to Stopwatch</button> */}
             </div>

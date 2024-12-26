@@ -1,8 +1,19 @@
 import { useEffect, useState, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Stopwatch } from "./Stopwatch";
-
 import { Sound } from "./Sound";
+/** @jsxImportSource @emotion/react */
+import { css } from "@emotion/react";
+import Button from '@mui/material/Button';
+
+const Font = css({
+    fontFamily: "Arial"
+})
+
+const General = css({
+    textAlign: "center",
+    margin: "24px"
+})
 
 export const Typing = () => {
     const targetStrings = ["apple", "banana", "orange"]; //入力させる文字列
@@ -16,6 +27,7 @@ export const Typing = () => {
     const [time, setTime] = useState(0); //計測時間
     const [showBorder, setShowBorder] = useState(false); //タイプミス時のボーダー表示
     const soundRef = useRef(); //音を鳴らす
+
     //react-router-dom
     const navigate = useNavigate();
     const handleHome = () => {
@@ -96,21 +108,23 @@ export const Typing = () => {
     return (
         <>
             <Sound ref={soundRef} />
-            <div ref={divRef} tabIndex={0} onKeyDown={handleKeyDown} style={{ outline: "none" }}>
-                <h1>Typing</h1>
-                <div style={{ borderWidth: "5px", borderStyle: "solid", borderColor: showBorder ? "red" : "white", transition: "border-color 0.1s" }}>
-                    {target && target.split("").map((char, index) => (//targetがundefineでないことを確認
-                        <span
-                            key={index}
-                            style={{ color: correctWordsIndex > index ? "gray" : "blue", fontSize: "50px" }}
-                        >
-                            {char}
-                        </span>
-                    ))}
+            <div css={General}>
+                <div ref={divRef} tabIndex={0} onKeyDown={handleKeyDown} style={{ outline: "none" }}>
+                    <h1>Typing</h1>
+                    <div style={{ borderWidth: "5px", borderStyle: "solid", borderColor: showBorder ? "red" : "white", transition: "border-color 0.1s" }}>
+                        {target && target.split("").map((char, index) => (//targetがundefineでないことを確認
+                            <span
+                                key={index}
+                                style={{ color: correctWordsIndex > index ? "gray" : "blue", fontSize: "50px", textAlign: "center" }}
+                            >
+                                {char}
+                            </span>
+                        ))}
+                    </div>
+                    <Stopwatch isTyping={isTyping} onTimeUpdate={setTime} />
                 </div>
-                <Stopwatch isTyping={isTyping} onTimeUpdate={setTime} />
+                <Button variant="outlined" onClick={handleHome}>to Home</Button>
             </div>
-            <button onClick={handleHome}>to Home</button>
         </>
     );
 };
