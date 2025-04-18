@@ -127,8 +127,10 @@ export const Typing = () => {
 
         //押されたキーが正しかったらindexを1増やす
         if (key === currentChar) {
+            setCountCorrectTyping((prev) => prev + 1);
+            
             if (correctWordsIndex + 1 === target.length) {
-                // 最後の文字を正しくタイプした場合
+                //最後の文字を正しくタイプした場合
                 setCorrect(true);
                 setTargetIndex((prev) => prev + 1);
                 setCorrectWordsIndex(0);
@@ -138,7 +140,7 @@ export const Typing = () => {
             }
         } else {
             setCorrect(false);
-            setShowBorder(true); // 🔥 ミスしたら赤枠表示 → useEffect で消す
+            setShowBorder(true); //ミスしたら赤枠表示 → useEffect で消す
         }
     };
 
