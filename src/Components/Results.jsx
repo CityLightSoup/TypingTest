@@ -34,8 +34,8 @@ export const Results = () => {
                 <p>accuracy : {Math.round((correctInputs / totalInputs) * 1000) / 10}%</p>
                 <p>
                     Time : {" "}
-                    {Math.floor(elapsedTime / 600000)}:
-                    {Math.floor((elapsedTime % 600000) / 1000).toString().padStart(2, "0")}:
+                    {Math.floor(elapsedTime / 60000)}:
+                    {Math.floor((elapsedTime % 60000) / 1000).toString().padStart(2, "0")}:
                     {Math.floor((elapsedTime % 1000) / 10).toString().padStart(2, "0")}
                 </p>
                 <Button variant="outlined" onClick={handleHome}>to Home</Button>

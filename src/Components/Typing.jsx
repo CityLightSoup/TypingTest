@@ -16,9 +16,44 @@ const General = css({
 })
 
 export const Typing = () => {
-    const targetStrings = ["apple", "banana", "orange"]; //入力させる文字列
+    // const targetStrings = ["apple", "banana", "orange"]; //入力させる文字列
+    const originalStrings = [
+        "The sky is blue",
+        "I love coffee",
+        "She walks fast",
+        "Time flies quickly",
+        "Life is a journey",
+        "Open the window",
+        "I lost my keys",
+        "He reads every day",
+        "Trust your heart",
+        "This is my home",
+        "Music makes me happy",
+        "I will try again",
+        "The world is changing",
+        "Dreams can come true",
+        "Just keep going",
+        "Smile and move on",
+        "Peace begins with you",
+        "She sings so well",
+        "The cat is sleeping",
+        "I miss the summer",
+        "Be kind to yourself",
+        "Never stop learning",
+        "Believe in magic",
+        "Find your purpose",
+        "Rainy days are calm",
+        "You are not alone",
+        "Enjoy the little things",
+        "Challenge leads to growth",
+        "Kindness changes everything",
+        "Patience is powerful"
+    ];
+
+    const [targetStrings] = useState(() => [...originalStrings].sort(() => Math.random() - 0.5));
     const [target, setTarget] = useState(targetStrings[0]); //今入力する文字列
     const [targetIndex, setTargetIndex] = useState(0); //今入力する文字列をtargetStringsから指定するための数値
+    
     const [correctWordsIndex, setCorrectWordsIndex] = useState(0); //入力があっていた文字数
     const [countTyping, setCountTyping] = useState(0); //入力回数
     const [countCorectTyping, setCountCorrectTyping] = useState(0); //正しく入力した回数
@@ -34,7 +69,7 @@ export const Typing = () => {
         navigate('/');
     }
     const { state } = useLocation(); //Homeから値を受け取る
-    const [isTyping, setIsTyping] = useState(state?.isTyping || false); //初期値をstateに設定
+    const [isTyping, setIsTyping] = useState(state?.isTyping || false); //初期値をstateに設定 Homeから受け継ぐのでtrueになる。なければfalse
 
     //targetStringsに格納した文字列をすべて入力し終えたらResultsに遷移。それまではtargetに次の文字列をセットする
     useEffect(() => {
@@ -60,11 +95,11 @@ export const Typing = () => {
 
     //ミスタイプ時のアラート表示
     useEffect(() => {
-        if (!correct && showBorder) {
+        if (showBorder) {
             const timer = setTimeout(() => setShowBorder(false), 100);
             return () => clearTimeout(timer);
         }
-    }, [correct, showBorder]);
+    }, [showBorder]);
 
     const handleKeyDown = (event) => {
         const key = event.key;
@@ -80,7 +115,9 @@ export const Typing = () => {
     }
 
     const Typing = (event) => {
-        const key = event.key;
+        const key = event.key.toLowerCase(); //入力された文字を小文字に
+        const currentChar = target[correctWordsIndex]?.toLowerCase(); //正解の文字も小文字に
+
         // console.log("----------\n if the input is correct? : " + correct);
         // console.log("a current correct word is : " + target[correctWordsIndex]);
         // console.log("the index of correct words : " + correctWordsIndex + "\n----------");
@@ -89,19 +126,19 @@ export const Typing = () => {
         setCountTyping((prev) => prev + 1);
 
         //押されたキーが正しかったらindexを1増やす
-        if (target[correctWordsIndex] === key) {
-            setCorrectWordsIndex((prev) => prev + 1);
-            setCountCorrectTyping((prev) => prev + 1);
-            setCorrect(true);
+        if (key === currentChar) {
+            if (correctWordsIndex + 1 === target.length) {
+                // 最後の文字を正しくタイプした場合
+                setCorrect(true);
+                setTargetIndex((prev) => prev + 1);
+                setCorrectWordsIndex(0);
+            } else {
+                setCorrectWordsIndex((prev) => prev + 1);
+                setCorrect(true);
+            }
         } else {
             setCorrect(false);
-            setShowBorder(true);
-        }
-
-        //すべて入力されたら次の文字列にする
-        if (correctWordsIndex + 1 === target.length && target[correctWordsIndex] === key) {
-            setTargetIndex((prev) => prev + 1);
-            setCorrectWordsIndex(0); //新しい文字列に切り替えるのでリセット
+            setShowBorder(true); // 🔥 ミスしたら赤枠表示 → useEffect で消す
         }
     };
 
