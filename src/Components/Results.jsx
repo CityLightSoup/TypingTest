@@ -1,47 +1,37 @@
-import { useLocation, useNavigate } from "react-router-dom"
-/** @jsxImportSource @emotion/react */
-import { css } from "@emotion/react";
-import Button from '@mui/material/Button';
-
-const Font = css({
-    fontFamily: "Arial"
-})
-
-const Title = css({
-    textAlign: "center",
-    margin: "24px"
-})
-
-const Body = css({
-    textAlign: "center",
-    margin: "24px"
-})
+import { useLocation, useNavigate } from "react-router-dom";
+import Button from "@mui/material/Button";
 
 export const Results = () => {
-    const navigate = useNavigate();
-    const handleHome = () => {
-        navigate('/');
-    }
-    const location = useLocation();
-    const { totalInputs, correctInputs, elapsedTime } = location.state || {};
+  const { state } = useLocation();
+  const navigate = useNavigate();
 
-    return (
-        <>
-            <h1 css={Title}>Results</h1>
-            <div css={Body}>
-                <p>totalInputs : {totalInputs}</p>
-                <p>correctInputs : {correctInputs}</p>
-                <p>accuracy : {Math.round((correctInputs / totalInputs) * 1000) / 10}%</p>
-                <p>
-                    Time : {" "}
-                    {Math.floor(elapsedTime / 60000)}:
-                    {Math.floor((elapsedTime % 60000) / 1000).toString().padStart(2, "0")}:
-                    {Math.floor((elapsedTime % 1000) / 10).toString().padStart(2, "0")}
-                </p>
-                <Button variant="outlined" onClick={handleHome}>to Home</Button>
-            </div>
+  if (!state) return <div>No results data.</div>;
 
-        </>
+  const { totalInputs, correctInputs, elapsedTime, fromPractice } = state;
+  const accuracy = totalInputs ? ((correctInputs / totalInputs) * 100).toFixed(2) : 0;
+  const timeSeconds = (elapsedTime / 1000).toFixed(2);
 
-    )
-}
+  return (
+    <div style={{ textAlign: "center", marginTop: 40 }}>
+      <h1>{fromPractice ? "Practice Results" : "Typing Test Results"}</h1>
+      <p>Total Inputs: {totalInputs}</p>
+      <p>Correct Inputs: {correctInputs}</p>
+      <p>Accuracy: {accuracy}%</p>
+      <p>Elapsed Time: {timeSeconds} seconds</p>
+      {fromPractice && (
+        <Button
+          variant="contained"
+          onClick={() => navigate("/Countdown")}
+          style={{ marginTop: 20 }}
+        >
+          本番を始める
+        </Button>
+      )}
+      {!fromPractice && (
+        <Button variant="contained" onClick={() => navigate("/")}>
+          ホームに戻る
+        </Button>
+      )}
+    </div>
+  );
+};

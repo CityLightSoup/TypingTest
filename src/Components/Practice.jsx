@@ -1,51 +1,24 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Countdown } from "../Components/Countdown";
 import { Stopwatch } from "../Components/Stopwatch";
 import { Sound } from "../Components/Sound";
 import Button from "@mui/material/Button";
 
-const typingStrings = [
-    "i love programming",
-    "typing fast is fun",
-    "practice makes perfect",
-    "react is a powerful library",
-    "never stop learning",
-    "focus on accuracy first",
-    "speed comes with time",
-    "consistency is key",
-    "keep your hands relaxed",
-    "don't look at the keyboard",
-    "break large problems down",
-    "debugging is a skill",
-    "small habits lead to big results",
-    "always test your code",
-    "write clean and readable code",
-    "use meaningful variable names",
-    "embrace challenges as growth",
-    "stay curious and ask questions",
-    "mistakes are part of learning",
-    "success comes through effort",
-    "learning never really ends",
-    "take breaks when needed",
-    "share knowledge with others",
-    "document your work properly",
-    "work on projects you enjoy",
-    "read code written by others",
-    "strive for continuous improvement",
-    "master the fundamentals first",
-    "technology changes quickly",
-    "celebrate small victories"
-  ];
-  
+const practiceStrings = [
+  "never stop trying your best",
+  "keep pushing forward every day",
+  "believe in yourself always",
+  "practice leads to great results",
+  "stay focused and work hard"
+];
 
-export const Typing = () => {
+export const Practice = () => {
   const navigate = useNavigate();
-  const location = useLocation();
 
-  const [phase, setPhase] = useState("countdown"); // 初期値は countdown
+  const [phase, setPhase] = useState("countdown"); // countdown, typing
   const [targetIndex, setTargetIndex] = useState(0);
-  const [target, setTarget] = useState(typingStrings[0]);
+  const [target, setTarget] = useState(practiceStrings[0]);
   const [correctIndex, setCorrectIndex] = useState(0);
   const [countTyping, setCountTyping] = useState(0);
   const [countCorrectTyping, setCountCorrectTyping] = useState(0);
@@ -56,8 +29,8 @@ export const Typing = () => {
   const soundRef = useRef();
 
   useEffect(() => {
-    if (targetIndex < typingStrings.length) {
-      setTarget(typingStrings[targetIndex]);
+    if (targetIndex < practiceStrings.length) {
+      setTarget(practiceStrings[targetIndex]);
       setCorrectIndex(0);
     }
   }, [targetIndex]);
@@ -66,7 +39,7 @@ export const Typing = () => {
     if (phase === "typing" && divRef.current) {
       const timer = setTimeout(() => {
         divRef.current.focus();
-      }, 100);
+      }, 100); // 少し遅延させてフォーカス
       return () => clearTimeout(timer);
     }
   }, [phase]);
@@ -80,6 +53,7 @@ export const Typing = () => {
 
   const handleKeyDown = (event) => {
     if (phase !== "typing") return;
+
     if (soundRef.current) soundRef.current.playSound();
     processTyping(event.key);
   };
@@ -92,13 +66,14 @@ export const Typing = () => {
     if (input === correctChar) {
       setCountCorrectTyping((prev) => prev + 1);
       if (correctIndex + 1 === target.length) {
-        if (targetIndex + 1 === typingStrings.length) {
+        if (targetIndex + 1 === practiceStrings.length) {
+          // 練習終了 → 結果画面へ
           navigate("/results", {
             state: {
-              totalInputs: countTyping + 1,
+              totalInputs: countTyping + 1, // 最後の入力も含める
               correctInputs: countCorrectTyping + 1,
               elapsedTime: time,
-              isPractice: false,
+              isPractice: true,
             },
           });
         } else {
@@ -127,7 +102,7 @@ export const Typing = () => {
       )}
       {phase === "typing" && (
         <>
-          <h1>Typing Test</h1>
+          <h1>Practice</h1>
           <div
             ref={divRef}
             tabIndex={0}
