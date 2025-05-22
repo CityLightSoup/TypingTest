@@ -9,7 +9,11 @@ export const Home = () => {
   };
 
   const handleTyping = () => {
-    navigate("/Typing");
+    navigate("/Typing", { state: { round: 1} });
+  };
+
+  const handleTyping2 = () => {
+    navigate("/Typing", { state: { round: 2} });
   };
 
   return (
@@ -23,7 +27,14 @@ export const Home = () => {
         onClick={handleTyping}
         style={{ marginLeft: 20 }}
       >
-        本番スタート
+        本番1
+      </Button>
+      <Button
+        variant="outlined"
+        onClick={handleTyping2}
+        style={{ marginRight: 20 }}
+      >
+        本番2
       </Button>
     </div>
   );
