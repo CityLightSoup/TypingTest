@@ -85,6 +85,9 @@ export const Practice = () => {
       }
     } else {
       setShowBorder(true);
+      if (soundRef.current) {
+        soundRef.current.playBeep();
+      }
     }
   };
 
@@ -119,18 +122,24 @@ export const Practice = () => {
               maxWidth: "80vw",
             }}
           >
-            {target.split("").map((char, index) => (
-              <span
-                key={index}
-                style={{
-                  color: correctIndex > index ? "gray" : "black",
-                  fontSize: 40,
-                  whiteSpace: "pre-wrap",
-                }}
-              >
-                {char}
-              </span>
-            ))}
+            {target.split("").map((char, index) => {
+              let style = {
+                fontSize: 40,
+                whiteSpace: "pre-wrap",
+                color: correctIndex > index ? "blue" : "black",
+              };
+
+              // 入力している文字にアンダーラインを付ける
+              if (index === correctIndex) {
+                style.borderBottom = "3px solid #2196f3";
+              }
+
+              return (
+                <span key={index} style={style}>
+                  {char}
+                </span>
+              );
+            })}
           </div>
           <Stopwatch isTyping={isTyping} onTimeUpdate={setTime} />
         </>

@@ -12,6 +12,7 @@ import sound6 from '../Sounds/keySound6.wav'
 import sound7 from '../Sounds/keySound7.wav'
 import sound8 from '../Sounds/keySound8.wav'
 import sound9 from '../Sounds/keySound9.wav'
+import beepSound from '../Sounds/beep.mp3'
 
 
 export const Sound = forwardRef((props, ref) => {
@@ -26,6 +27,7 @@ export const Sound = forwardRef((props, ref) => {
     const [playSound7] = useSound(sounds[7]);
     const [playSound8] = useSound(sounds[8]);
     const [playSound9] = useSound(sounds[9]);
+    const [playBeep] = useSound(beepSound, { volume: 0.2 });
 
     const playSounds = [playSound0, playSound1, playSound2, playSound3, playSound4, playSound5, playSound6, playSound7, playSound8, playSound9];
 
@@ -36,6 +38,9 @@ export const Sound = forwardRef((props, ref) => {
             //ランダムなplaySoundを呼び出す
             const index = Math.floor(Math.random() * playSounds.length);
             playSounds[index]();
+        },
+        playBeep: () => {
+            playBeep();
         }
     }));
 

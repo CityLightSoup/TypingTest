@@ -154,6 +154,9 @@ export const Typing = () => {
       }
     } else {
       setShowBorder(true);
+      if (soundRef.current) {
+        soundRef.current.playBeep();
+      }
     }
   };
 
