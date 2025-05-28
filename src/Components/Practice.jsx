@@ -54,7 +54,7 @@ export const Practice = () => {
   const handleKeyDown = (event) => {
     if (phase !== "typing") return;
 
-    if (soundRef.current) soundRef.current.playSound();
+    if (soundRef.current) soundRef.current.playPractice();
     processTyping(event.key);
   };
 
