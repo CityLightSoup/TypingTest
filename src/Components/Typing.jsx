@@ -5,7 +5,7 @@ import { Stopwatch } from "../Components/Stopwatch";
 import { Sound } from "../Components/Sound";
 import Button from "@mui/material/Button";
 
-const typingStrings = [
+const typingStrings1 = [
   "he drinks tea before starting the day",
   "they walked to school in the light rain",
   "she forgot her keys on the kitchen table",
@@ -72,6 +72,72 @@ const typingStrings2 = [
   "i made a sandwich with ham and cheese"
 ];
 
+const typingStrings3 = [
+  "she folded laundry while watching tv",
+  "he boiled water to make some tea",
+  "they played chess in the quiet room",
+  "i cleaned the windows this morning",
+  "he trimmed the plants on the balcony",
+  "she took notes during the lecture",
+  "we walked to the store before lunch",
+  "he wrote his name on the notebook",
+  "they waited outside the theater door",
+  "i organized the books by color",
+  "she turned on the lights before bed",
+  "he brushed the dog in the backyard",
+  "they shared snacks on the school trip",
+  "he checked the time before leaving",
+  "she answered every question politely",
+  "i watered the plants in the kitchen",
+  "he read the manual before installing",
+  "they played music on the old radio",
+  "she bought groceries after work",
+  "i stretched before going for a run",
+  "we took turns stirring the soup",
+  "he opened the box with a small knife",
+  "she found her scarf under the table",
+  "they cleaned the garage last weekend",
+  "i placed the bowl on the top shelf",
+  "he charged his phone overnight",
+  "we planned the trip over breakfast",
+  "she ironed the shirt for tomorrow",
+  "they set the alarm for seven",
+  "i made a sandwich with ham and cheese"
+];
+
+const typingStrings4 = [
+  "she folded laundry while watching tv",
+  "he boiled water to make some tea",
+  "they played chess in the quiet room",
+  "i cleaned the windows this morning",
+  "he trimmed the plants on the balcony",
+  "she took notes during the lecture",
+  "we walked to the store before lunch",
+  "he wrote his name on the notebook",
+  "they waited outside the theater door",
+  "i organized the books by color",
+  "she turned on the lights before bed",
+  "he brushed the dog in the backyard",
+  "they shared snacks on the school trip",
+  "he checked the time before leaving",
+  "she answered every question politely",
+  "i watered the plants in the kitchen",
+  "he read the manual before installing",
+  "they played music on the old radio",
+  "she bought groceries after work",
+  "i stretched before going for a run",
+  "we took turns stirring the soup",
+  "he opened the box with a small knife",
+  "she found her scarf under the table",
+  "they cleaned the garage last weekend",
+  "i placed the bowl on the top shelf",
+  "he charged his phone overnight",
+  "we planned the trip over breakfast",
+  "she ironed the shirt for tomorrow",
+  "they set the alarm for seven",
+  "i made a sandwich with ham and cheese"
+];
+
 
 const shuffleArray = (array) => {
   return [...array].sort(() => Math.random() - 0.5);
@@ -81,10 +147,23 @@ export const Typing = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // 何回目なのかをカウントする
+  // 何回目なのかをカウントする。1スタート
   const round = location.state?.round || 1;
-  const rawStrings = round === 1 ? typingStrings : typingStrings2;
-  const [shuffledStrings] = useState(() => shuffleArray(rawStrings));
+  // const rawStrings = round === 1 ? typingStrings : typingStrings2;
+  // Home.jsxから受け取ったroundに応じてtypingStringsを決定する
+  let selectedTypingStrings;
+  if (round === 1) {
+    selectedTypingStrings = typingStrings1
+  } else if (round === 2) {
+    selectedTypingStrings = typingStrings2
+  } else if (round === 3) {
+    selectedTypingStrings = typingStrings3
+  } else if (round === 4) {
+    selectedTypingStrings = typingStrings4
+  } else {
+    selectedTypingStrings = typingStrings1
+  }
+  const [shuffledStrings] = useState(() => shuffleArray(selectedTypingStrings));
 
   const [phase, setPhase] = useState("countdown"); // 初期値は countdown
   const [targetIndex, setTargetIndex] = useState(0);
@@ -162,7 +241,7 @@ export const Typing = () => {
 
   return (
     <div style={{ textAlign: "center", marginTop: 20 }}>
-      <Sound ref={soundRef} />
+      <Sound ref={soundRef} round={round} />
       {phase === "countdown" && (
         <Countdown
           startCount={3}
@@ -174,7 +253,10 @@ export const Typing = () => {
       )}
       {phase === "typing" && (
         <>
-          <h1>Typing Test</h1>
+          <h1>Typing Test - Round {round}</h1>
+          <p style={{ fontSize: 20, marginBottom: 10 }}>
+            {targetIndex + 1} / {shuffledStrings.length}問目
+          </p>
           <div
             ref={divRef}
             tabIndex={0}

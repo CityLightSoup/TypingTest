@@ -93,7 +93,7 @@ export const Practice = () => {
 
   return (
     <div style={{ textAlign: "center", marginTop: 20 }}>
-      <Sound ref={soundRef} />
+      <Sound ref={soundRef} round={0}/>
       {phase === "countdown" && (
         <Countdown
           startCount={3}
@@ -106,6 +106,9 @@ export const Practice = () => {
       {phase === "typing" && (
         <>
           <h1>Practice</h1>
+          <p style={{ fontSize: 20, marginBottom: 10 }}>
+            {targetIndex + 1} / {practiceStrings.length}問目
+          </p>
           <div
             ref={divRef}
             tabIndex={0}

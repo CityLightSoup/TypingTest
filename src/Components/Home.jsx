@@ -8,13 +8,21 @@ export const Home = () => {
     navigate("/Practice");
   };
 
-  const handleTyping = () => {
-    navigate("/Typing", { state: { round: 1} });
+  const handleTyping = (roundNum) => {
+    navigate("/Typing", { state: { round: roundNum } });
   };
 
-  const handleTyping2 = () => {
-    navigate("/Typing", { state: { round: 2} });
-  };
+  // const handleTyping2 = () => {
+  //   navigate("/Typing", { state: { round: 2} });
+  // };
+
+  // const handleTyping3 = () => {
+  //   navigate("/Typing", { state: { round: 3} });
+  // };
+
+  // const handleTyping4 = () => {
+  //   navigate("/Typing", { state: { round: 4} });
+  // };
 
   return (
     <div style={{ textAlign: "center", marginTop: 40 }}>
@@ -24,17 +32,31 @@ export const Home = () => {
       </Button>
       <Button
         variant="outlined"
-        onClick={handleTyping}
+        onClick={() => handleTyping(1)}
         style={{ marginLeft: 20 }}
       >
         本番1
       </Button>
       <Button
         variant="outlined"
-        onClick={handleTyping2}
-        style={{ marginRight: 20 }}
+        onClick={() => handleTyping(2)}
+        // style={{ marginRight: 20 }}
       >
         本番2
+      </Button>
+      <Button
+        variant="outlined"
+        onClick={() => handleTyping(3)}
+        // style={{ marginRight: 20 }}
+      >
+        本番3
+      </Button>
+      <Button
+        variant="outlined"
+        onClick={() => handleTyping(4)}
+        style={{ marginRight: 20 }}
+      >
+        本番4
       </Button>
     </div>
   );
