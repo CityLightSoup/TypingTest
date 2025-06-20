@@ -87,7 +87,7 @@ export const Sound = forwardRef(({ round } , ref) => {
     const [play_r4s7] = useSound(r4s7, { volume: 0.2 });
     const [play_r4s8] = useSound(r4s8, { volume: 0.2 });
     const [play_r4s9] = useSound(r4s9, { volume: 0.2 });
-    const [play_practice] = useSound(pras0, { volume: 0.2 });
+    const [playPractice] = useSound(pras0, { volume: 0.2 });
     const [playBeep] = useSound(beepSound, { volume: 0.2 });
 
     const soundPlayersPerRound = {
@@ -104,7 +104,7 @@ export const Sound = forwardRef(({ round } , ref) => {
             const currentRoundSoundSet = soundPlayersPerRound[round];
 
             if (round === 0) {
-                play_practice();
+                playPractice();
             }
 
             if(currentRoundSoundSet && currentRoundSoundSet.length === 10) {
@@ -127,7 +127,7 @@ export const Sound = forwardRef(({ round } , ref) => {
             playBeep();
         },
         playPractice: () => {
-            PlayPractice();
+            playPractice();
         }
     }));
 

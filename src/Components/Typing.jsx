@@ -141,31 +141,26 @@ const typingStrings4 = [
 
 const shuffleArray = (array) => {
   return [...array].sort(() => Math.random() - 0.5);
-}
+};
 
 export const Typing = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // 何回目なのかをカウントする。1スタート
   const round = location.state?.round || 1;
-  // const rawStrings = round === 1 ? typingStrings : typingStrings2;
-  // Home.jsxから受け取ったroundに応じてtypingStringsを決定する
   let selectedTypingStrings;
   if (round === 1) {
-    selectedTypingStrings = typingStrings1
+    selectedTypingStrings = typingStrings1;
   } else if (round === 2) {
-    selectedTypingStrings = typingStrings2
+    selectedTypingStrings = typingStrings2;
   } else if (round === 3) {
-    selectedTypingStrings = typingStrings3
-  } else if (round === 4) {
-    selectedTypingStrings = typingStrings4
+    selectedTypingStrings = typingStrings3;
   } else {
-    selectedTypingStrings = typingStrings1
+    selectedTypingStrings = typingStrings1; // Fallback to round 1 if round is invalid
   }
   const [shuffledStrings] = useState(() => shuffleArray(selectedTypingStrings));
 
-  const [phase, setPhase] = useState("countdown"); // 初期値は countdown
+  const [phase, setPhase] = useState('countdown'); // 初期値は countdown
   const [targetIndex, setTargetIndex] = useState(0);
   const [target, setTarget] = useState(shuffledStrings[0]);
   const [correctIndex, setCorrectIndex] = useState(0);
@@ -185,7 +180,7 @@ export const Typing = () => {
   }, [targetIndex, shuffledStrings]);
 
   useEffect(() => {
-    if (phase === "typing" && divRef.current) {
+    if (phase === 'typing' && divRef.current) {
       const timer = setTimeout(() => {
         divRef.current.focus();
       }, 100);
@@ -201,12 +196,17 @@ export const Typing = () => {
   }, [showBorder]);
 
   const handleKeyDown = (event) => {
-    if (phase !== "typing") return;
+    if (phase !== 'typing') return;
     if (soundRef.current) soundRef.current.playSound();
     processTyping(event.key);
   };
 
   const processTyping = (key) => {
+    // Prevent default behavior for spacebar to avoid scrolling
+    if (key === ' ') {
+      // event.preventDefault(); // If event is passed, prevent default
+    }
+
     const input = key.toLowerCase();
     const correctChar = target[correctIndex]?.toLowerCase();
     setCountTyping((prev) => prev + 1);
@@ -214,24 +214,30 @@ export const Typing = () => {
     if (input === correctChar) {
       setCountCorrectTyping((prev) => prev + 1);
       if (correctIndex + 1 === target.length) {
+        // End of current string
         if (targetIndex + 1 === shuffledStrings.length) {
-          navigate("/results", {
+          // End of all strings for this round
+          setIsTyping(false); // Stop the stopwatch
+          navigate('/results', {
             state: {
               totalInputs: countTyping + 1,
               correctInputs: countCorrectTyping + 1,
               elapsedTime: time,
               isPractice: false,
-              round: round,
+              round: round, // Pass the current round number
             },
           });
         } else {
+          // Next string
           setTargetIndex((prev) => prev + 1);
           setCorrectIndex(0);
         }
       } else {
+        // Next character in current string
         setCorrectIndex((prev) => prev + 1);
       }
     } else {
+      // Incorrect character
       setShowBorder(true);
       if (soundRef.current) {
         soundRef.current.playBeep();
@@ -240,69 +246,77 @@ export const Typing = () => {
   };
 
   return (
-    <div style={{ textAlign: "center", marginTop: 20 }}>
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 p-4 font-inter">
       <Sound ref={soundRef} round={round} />
-      {phase === "countdown" && (
+      {phase === 'countdown' && (
         <Countdown
           startCount={3}
           onComplete={() => {
-            setPhase("typing");
+            setPhase('typing');
             setIsTyping(true);
           }}
         />
       )}
-      {phase === "typing" && (
+      {phase === 'typing' && (
         <>
-          <h1>Typing Test - Round {round}</h1>
-          <p style={{ fontSize: 20, marginBottom: 10 }}>
+          <h1 className="text-4xl font-bold text-gray-800 mb-6">
+            Typing Test - Round {round}
+          </h1>
+          <p className="text-xl text-gray-600 mb-4">
             {targetIndex + 1} / {shuffledStrings.length}問目
           </p>
           <div
             ref={divRef}
             tabIndex={0}
             onKeyDown={handleKeyDown}
-            style={{
-              outline: "none",
-              borderWidth: "5px",
-              borderStyle: "solid",
-              borderColor: showBorder ? "red" : "white",
-              transition: "border-color 0.1s",
-              padding: 10,
-              userSelect: "none",
-              margin: "0 auto",
-              maxWidth: "80vw",
-            }}
+            className={`
+              relative w-full max-w-2xl p-6 rounded-xl shadow-lg bg-white
+              border-4 transition-colors duration-100 ease-out
+              ${showBorder ? 'border-red-500' : 'border-gray-200'}
+              focus:outline-none focus:ring-4 focus:ring-blue-200
+            `}
+            style={{ userSelect: 'none' }}
           >
-            {target.split("").map((char, index) => {
-              let style = {
-                fontSize: 40,
-                whiteSpace: "pre-wrap",
-                color: correctIndex > index ? "blue" : "black",
-              };
+            <p className="text-5xl font-mono leading-relaxed break-words">
+              {target.split('').map((char, index) => {
+                let colorClass = 'text-gray-800';
+                let underlineClass = '';
 
-              // 入力している文字にアンダーラインを付ける
-              if (index === correctIndex) {
-                style.borderBottom = "3px solid #2196f3";
-              }
+                if (index < correctIndex) {
+                  colorClass = 'text-blue-600'; // Correctly typed characters
+                } else if (index === correctIndex) {
+                  underlineClass = 'border-b-4 border-blue-500'; // Current character
+                }
 
-              return (
-                <span key={index} style={style}>
-                  {char}
-                </span>
-              );
-            })}
-
+                return (
+                  <span key={index} className={`${colorClass} ${underlineClass}`}>
+                    {char}
+                  </span>
+                );
+              })}
+            </p>
           </div>
           <Stopwatch isTyping={isTyping} onTimeUpdate={setTime} />
+          <Button
+            variant="outlined"
+            onClick={() => navigate('/')}
+            sx={{
+              marginTop: '1.5rem',
+              padding: '0.75rem 2rem',
+              fontSize: '1rem',
+              borderRadius: '1rem',
+              borderColor: '#607D8B', // Grey
+              color: '#607D8B',
+              '&:hover': {
+                backgroundColor: '#ECEFF1', // Light grey hover
+                borderColor: '#455A64',
+              },
+            }}
+          >
+            Back to Home
+          </Button>
         </>
       )}
-      <Button
-        variant="outlined"
-        style={{ marginTop: 20 }}
-        onClick={() => navigate("/")}
-      >
-        Back to Home
-      </Button>
     </div>
   );
 };
