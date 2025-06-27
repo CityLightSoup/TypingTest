@@ -1,63 +1,65 @@
-import { useNavigate } from "react-router-dom";
-import Button from "@mui/material/Button";
+import React, { useState, useEffect, useRef } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import Button from '@mui/material/Button';
+import { generatePermutations, shuffleArray } from '../utils/Helpers.js';
+import { Countdown } from './Countdown.jsx';
 
+// 2. 定数とデータをインポート
+import {
+  allTypingStrings,
+  PERMUTATION_SET_KEY,
+  CURRENT_SESSION_KEY,
+  TOTAL_PERMUTATIONS
+} from '../constants/TypingConstans.js'
+
+// ------------------- Home.jsx -------------------
+// ホーム画面のコンポーネント
 export const Home = () => {
   const navigate = useNavigate();
+  const [completedInSet, setCompletedInSet] = useState(0);
 
-  const handlePractice = () => {
-    navigate("/Practice");
+  useEffect(() => {
+    const savedSet = localStorage.getItem(PERMUTATION_SET_KEY);
+    const remainingCount = savedSet ? JSON.parse(savedSet).length : TOTAL_PERMUTATIONS;
+    setCompletedInSet(TOTAL_PERMUTATIONS - remainingCount);
+  }, []);
+
+  const handleTypingStart = () => {
+    let permutationSet = JSON.parse(localStorage.getItem(PERMUTATION_SET_KEY) || '[]');
+    if (permutationSet.length === 0) {
+      // generatePermutations と shuffleArray を使う
+      const roundIndexes = Array.from(Array(allTypingStrings.length).keys());
+      const newPermutations = generatePermutations(roundIndexes);
+      permutationSet = shuffleArray(newPermutations);
+    }
+    const currentSession = permutationSet.pop();
+    localStorage.setItem(PERMUTATION_SET_KEY, JSON.stringify(permutationSet));
+    localStorage.setItem(CURRENT_SESSION_KEY, JSON.stringify(currentSession));
+    navigate("/Typing", { state: { roundIndex: currentSession[0], roundInSession: 0 } });
   };
 
-  const handleTyping = (roundNum) => {
-    navigate("/Typing", { state: { round: roundNum } });
+  const handleReset = () => {
+    // localStorageからこのアプリ用のデータを削除
+    localStorage.removeItem(PERMUTATION_SET_KEY);
+    localStorage.removeItem(CURRENT_SESSION_KEY);
+    // ページをリロードして、変更を即座に反映
+    window.location.reload();
   };
-
-  // const handleTyping2 = () => {
-  //   navigate("/Typing", { state: { round: 2} });
-  // };
-
-  // const handleTyping3 = () => {
-  //   navigate("/Typing", { state: { round: 3} });
-  // };
-
-  // const handleTyping4 = () => {
-  //   navigate("/Typing", { state: { round: 4} });
-  // };
-
+  
+  // JSX内のロジックは変更なし
   return (
     <div style={{ textAlign: "center", marginTop: 40 }}>
       <h1>Typing</h1>
-      <Button variant="contained" onClick={handlePractice}>
+      <p>現在のセット: {completedInSet} / {TOTAL_PERMUTATIONS} 回 実行済み</p>
+      <Button variant="contained" onClick={() => {}} style={{ marginRight: '1rem' }}>
         練習
       </Button>
-      <Button
-        variant="outlined"
-        onClick={() => handleTyping(1)}
-        style={{ marginLeft: 20 }}
-      >
-        本番1
+      <Button variant="outlined" onClick={handleTypingStart}>
+        本番 ({completedInSet + 1}回目)
       </Button>
-      <Button
-        variant="outlined"
-        onClick={() => handleTyping(2)}
-        // style={{ marginRight: 20 }}
-      >
-        本番2
-      </Button>
-      <Button
-        variant="outlined"
-        onClick={() => handleTyping(3)}
-        // style={{ marginRight: 20 }}
-      >
-        本番3
-      </Button>
-      <Button
-        variant="outlined"
-        onClick={() => handleTyping(4)}
-        style={{ marginRight: 20 }}
-      >
-        本番4
-      </Button>
+      <Button variant="text" color="error" onClick={handleReset} size="small">
+          進捗をリセット
+        </Button>
     </div>
   );
 };

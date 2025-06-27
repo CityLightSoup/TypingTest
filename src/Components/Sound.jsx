@@ -127,7 +127,7 @@ export const Sound = forwardRef(({ round } , ref) => {
             playBeep();
         },
         playPractice: () => {
-            PlayPractice();
+            play_practice();
         }
     }));
 
