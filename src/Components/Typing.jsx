@@ -15,6 +15,7 @@ import { allTypingStrings } from '../constants/TypingConstans';
 const shuffleArray = (array) => {
   return [...array].sort(() => Math.random() - 0.5);
 };
+};
 
 export const Typing = () => {
   // --- Reactフックは必ずトップレベルで呼び出します ---
@@ -102,12 +103,17 @@ export const Typing = () => {
 
   // --- 関数定義 ---
   const handleKeyDown = (event) => {
-    if (phase !== "typing") return;
+    if (phase !== 'typing') return;
     if (soundRef.current) soundRef.current.playSound();
     processTyping(event.key);
   };
 
   const processTyping = (key) => {
+    // Prevent default behavior for spacebar to avoid scrolling
+    if (key === ' ') {
+      // event.preventDefault(); // If event is passed, prevent default
+    }
+
     const input = key.toLowerCase();
     const currentTarget = shuffledStrings[targetIndex] || "";
     const correctChar = currentTarget[correctIndex]?.toLowerCase();
@@ -162,12 +168,12 @@ export const Typing = () => {
         <Countdown
           startCount={3}
           onComplete={() => {
-            setPhase("typing");
+            setPhase('typing');
             setIsTyping(true);
           }}
         />
       )}
-      {phase === "typing" && (
+      {phase === 'typing' && (
         <>
           <h1>Typing Test - Session Round {roundInSession + 1} / {allTypingStrings.length}</h1>
           <p style={{ fontSize: 20, marginBottom: 10 }}>
