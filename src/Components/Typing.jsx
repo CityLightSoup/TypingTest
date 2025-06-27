@@ -15,7 +15,6 @@ import { allTypingStrings } from '../constants/TypingConstans';
 const shuffleArray = (array) => {
   return [...array].sort(() => Math.random() - 0.5);
 };
-};
 
 export const Typing = () => {
   // --- Reactフックは必ずトップレベルで呼び出します ---
