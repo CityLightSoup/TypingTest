@@ -12,7 +12,7 @@ import r1s6 from '../Sounds/keySound6.wav'
 import r1s7 from '../Sounds/keySound7.wav'
 import r1s8 from '../Sounds/keySound8.wav'
 import r1s9 from '../Sounds/keySound9.wav'
-import r2s0 from '../Sounds/keyS20.wav' //効果音ラボ カーソル移動6
+import r2s0 from '../Sounds/keyS20.wav'
 import r2s1 from '../Sounds/keyS21.wav'
 import r2s2 from '../Sounds/keyS22.wav'
 import r2s3 from '../Sounds/keyS23.wav'
@@ -57,16 +57,16 @@ export const Sound = forwardRef(({ round } , ref) => {
     const [play_r1s7] = useSound(r1s7);
     const [play_r1s8] = useSound(r1s8);
     const [play_r1s9] = useSound(r1s9);
-    const [play_r2s0] = useSound(r2s0, { volume: 0.1 });
-    const [play_r2s1] = useSound(r2s1, { volume: 0.1 });
-    const [play_r2s2] = useSound(r2s2, { volume: 0.1 });
-    const [play_r2s3] = useSound(r2s3, { volume: 0.1 });
-    const [play_r2s4] = useSound(r2s4, { volume: 0.1 });
-    const [play_r2s5] = useSound(r2s5, { volume: 0.1 });
-    const [play_r2s6] = useSound(r2s6, { volume: 0.1 });
-    const [play_r2s7] = useSound(r2s7, { volume: 0.1 });
-    const [play_r2s8] = useSound(r2s8, { volume: 0.1 });
-    const [play_r2s9] = useSound(r2s9, { volume: 0.1 });
+    const [play_r2s0] = useSound(r2s0, { volume: 0.2 });
+    const [play_r2s1] = useSound(r2s1, { volume: 0.2 });
+    const [play_r2s2] = useSound(r2s2, { volume: 0.2 });
+    const [play_r2s3] = useSound(r2s3, { volume: 0.2 });
+    const [play_r2s4] = useSound(r2s4, { volume: 0.2 });
+    const [play_r2s5] = useSound(r2s5, { volume: 0.2 });
+    const [play_r2s6] = useSound(r2s6, { volume: 0.2 });
+    const [play_r2s7] = useSound(r2s7, { volume: 0.2 });
+    const [play_r2s8] = useSound(r2s8, { volume: 0.2 });
+    const [play_r2s9] = useSound(r2s9, { volume: 0.2 });
     const [play_r3s0] = useSound(r3s0, { volume: 0.2 });
     const [play_r3s1] = useSound(r3s1, { volume: 0.2 });
     const [play_r3s2] = useSound(r3s2, { volume: 0.2 });
