@@ -24,6 +24,10 @@ export const Home = () => {
     setCompletedInSet(TOTAL_PERMUTATIONS - remainingCount);
   }, []);
 
+  const handlePractice = () => {
+    navigate("/Practice");
+  };
+
   const handleTypingStart = () => {
     let permutationSet = JSON.parse(localStorage.getItem(PERMUTATION_SET_KEY) || '[]');
     if (permutationSet.length === 0) {
@@ -35,7 +39,13 @@ export const Home = () => {
     const currentSession = permutationSet.pop();
     localStorage.setItem(PERMUTATION_SET_KEY, JSON.stringify(permutationSet));
     localStorage.setItem(CURRENT_SESSION_KEY, JSON.stringify(currentSession));
-    navigate("/Typing", { state: { roundIndex: currentSession[0], roundInSession: 0 } });
+    navigate("/Typing", { 
+        state: { 
+            roundIndex: currentSession[0], 
+            roundInSession: 0,
+            sessionResults: [] // 結果を蓄積する配列
+        } 
+    });
   };
 
   const handleReset = () => {
@@ -51,7 +61,7 @@ export const Home = () => {
     <div style={{ textAlign: "center", marginTop: 40 }}>
       <h1>Typing</h1>
       <p>現在のセット: {completedInSet} / {TOTAL_PERMUTATIONS} 回 実行済み</p>
-      <Button variant="contained" onClick={() => {}} style={{ marginRight: '1rem' }}>
+      <Button variant="contained" onClick={handlePractice} style={{ marginRight: '1rem' }}>
         練習
       </Button>
       <Button variant="outlined" onClick={handleTypingStart}>

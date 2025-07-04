@@ -1,32 +1,32 @@
 import { useEffect, useState } from "react";
 
 export const Stopwatch = (props) => {
-    const { isTyping, onTimeUpdate } = props;
+    const { isTyping, onTimeUpdate, reset } = props;
     const [time, setTime] = useState(0);
-    const [isRunning, setIsRunning] = useState(isTyping);
 
+    // isTyping propに応じてタイマーを開始・停止する
     useEffect(() => {
-        let interval;
-        if(isRunning) {
+        let interval = null;
+        if (isTyping) {
             interval = setInterval(() => {
-                setTime((prevTime) => {
+                setTime(prevTime => {
                     const newTime = prevTime + 10;
-                    onTimeUpdate(newTime); //Typing.jsxのTimeを更新
-                    return newTime;
+                    onTimeUpdate(newTime); // 親コンポーネントの時間を更新
+                    return newTime;        // 自身の時間を更新
                 });
             }, 10);
-        } else {
-            clearInterval(interval);
         }
+        // コンポーネントが消えるか、isTypingがfalseになったらタイマーを停止
         return () => clearInterval(interval);
-    }, [isRunning]);
+    }, [isTyping, onTimeUpdate]);
 
-    // const handleStart = () => setIsRunning(true);
-    // const handleStop = () => setIsRunning(false);
-    // const handleReset = () => {
-    //     setIsRunning(false);
-    //     setTime(0);
-    // }
+    // reset propに応じてタイマーをリセットする
+    useEffect(() => {
+        if (reset) {
+            setTime(0);
+            onTimeUpdate(0);
+        }
+    }, [reset, onTimeUpdate]);
 
     return (
         <>
@@ -36,11 +36,6 @@ export const Stopwatch = (props) => {
                 {Math.floor((time % 60000) / 1000).toString().padStart(2, "0")}:
                 {Math.floor((time % 1000) / 10).toString().padStart(2, "0")}
             </p>
-            {/* <button onClick={handleStart}>Start</button>
-            <button onClick={handleStop}>Stop</button>
-            <button onClick={handleReset}>Reset</button> */}
         </>
-        
-    )
-
-}
+    );
+};

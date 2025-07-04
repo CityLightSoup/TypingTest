@@ -1,28 +1,23 @@
-import React, { useState, useEffect, useRef } from 'react';
+/*
+  Typing.jsx (修正版)
+  - キー入力時にタイプ音を再生する処理を`handleKeyDown`関数に追加しました。
+*/
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import { Countdown } from './Countdown';
 import { Sound } from './Sound';
 import { Stopwatch } from './Stopwatch';
-import { allTypingStrings } from '../constants/TypingConstans';
+import { allTypingStrings, CURRENT_SESSION_KEY } from '../constants/TypingConstans';
 
 // --- Mock Dependencies for Canvas Environment ---
-// プレビュー環境では外部ファイルを解決できないため、
-// 必要な関数、データ、コンポーネントをここで直接定義します。
-// ご自身のプロジェクトでは、このセクションを削除し、正しいimport文を使用してください。
-
-// from ../utils/helpers.js
-const shuffleArray = (array) => {
-  return [...array].sort(() => Math.random() - 0.5);
-};
+const shuffleArray = (array) => [...array].sort(() => Math.random() - 0.5);
 
 export const Typing = () => {
-  // --- Reactフックは必ずトップレベルで呼び出します ---
   const navigate = useNavigate();
   const location = useLocation();
 
-  // stateの初期化
-  const [phase, setPhase] = useState("loading"); // 初期状態は'loading'
+  const [phase, setPhase] = useState("loading");
   const [shuffledStrings, setShuffledStrings] = useState([]);
   const [targetIndex, setTargetIndex] = useState(0);
   const [correctIndex, setCorrectIndex] = useState(0);
@@ -32,58 +27,73 @@ export const Typing = () => {
   const [time, setTime] = useState(0);
   const [isTyping, setIsTyping] = useState(false);
 
-  // refの初期化
   const divRef = useRef(null);
   const soundRef = useRef(null);
   
-  // location.stateから値を取り出す（存在しない可能性も考慮）
   const roundIndex = location.state?.roundIndex;
   const roundInSession = location.state?.roundInSession;
+  const sessionResults = location.state?.sessionResults || [];
 
-  // --- useEffectで副作用（ロジック）を処理します ---
-
-  // location.stateのチェックと、タイピングデータの初期設定
   useEffect(() => {
-    // location.stateや必須の値がなければホームに戻す
     if (roundIndex === undefined || roundInSession === undefined) {
       setPhase("redirecting");
       navigate('/');
-      return; // このeffectの処理を中断
+      return;
     }
     
-    // 正常な場合は、英文をシャッフルしてstateを更新し、ゲーム開始準備
     const selectedTypingStrings = allTypingStrings[roundIndex];
     setShuffledStrings(shuffleArray(selectedTypingStrings));
-    setPhase("countdown"); // 準備完了、カウントダウンへ
+    setTargetIndex(0);
+    setCorrectIndex(0);
+    setCountTyping(0);
+    setCountCorrectTyping(0);
+    setTime(0);
+    setIsTyping(false);
+    setPhase("countdown");
+  }, [roundIndex, roundInSession, navigate]);
 
-  }, [roundIndex, roundInSession, navigate]); // 依存配列
+  const handleRoundComplete = useCallback(() => {
+    const currentRoundResult = {
+      totalInputs: countTyping + 1,
+      correctInputs: countCorrectTyping + 1,
+      elapsedTime: time,
+      roundNumber: roundInSession + 1
+    };
+    const newSessionResults = [...sessionResults, currentRoundResult];
+    const isLastInSession = roundInSession >= allTypingStrings.length - 1;
 
-  // デバッグ機能 (Shift + Enter)
+    if (isLastInSession) {
+      navigate("/results", {
+        state: { finalResults: newSessionResults },
+      });
+    } else {
+      const currentSession = JSON.parse(localStorage.getItem(CURRENT_SESSION_KEY) || '[]');
+      const nextRoundInSession = roundInSession + 1;
+      const nextRoundIndex = currentSession[nextRoundInSession];
+
+      navigate("/Wating", { // NOTE: Waiting画面のパスはご自身のルーティングに合わせてください
+        state: {
+          nextRoundIndex: nextRoundIndex,
+          nextRoundInSession: nextRoundInSession,
+          sessionResults: newSessionResults,
+        },
+      });
+    }
+  }, [countTyping, countCorrectTyping, time, roundInSession, sessionResults, navigate]);
+
   useEffect(() => {
     const handleDebugCommand = (event) => {
-      // roundInSessionが未定義の場合は実行しない
       if (event.shiftKey && event.key === 'Enter' && roundInSession !== undefined) {
         event.preventDefault();
-        console.log("デバッグコマンド実行: 結果画面へ遷移します。");
-        navigate("/results", {
-          state: {
-            totalInputs: countTyping,
-            correctInputs: countCorrectTyping,
-            elapsedTime: time,
-            isPractice: false,
-            roundInSession: roundInSession, // セッションのラウンド番号を渡す
-          },
-        });
+        handleRoundComplete();
       }
     };
     document.addEventListener('keydown', handleDebugCommand);
     return () => {
       document.removeEventListener('keydown', handleDebugCommand);
     };
-  }, [navigate, countTyping, countCorrectTyping, time, roundInSession]);
-
+  }, [roundInSession, handleRoundComplete]);
   
-  // タイピングエリアにフォーカスを当てる
   useEffect(() => {
     if (phase === "typing" && divRef.current) {
       const timer = setTimeout(() => divRef.current.focus(), 100);
@@ -91,7 +101,6 @@ export const Typing = () => {
     }
   }, [phase]);
 
-  // ミスタイプ時の赤枠表示
   useEffect(() => {
     if (showBorder) {
       const timer = setTimeout(() => setShowBorder(false), 100);
@@ -99,65 +108,42 @@ export const Typing = () => {
     }
   }, [showBorder]);
 
-
-  // --- 関数定義 ---
-  const handleKeyDown = (event) => {
-    if (phase !== 'typing') return;
-    if (soundRef.current) soundRef.current.playSound();
-    processTyping(event.key);
-  };
-
   const processTyping = (key) => {
-    // Prevent default behavior for spacebar to avoid scrolling
-    if (key === ' ') {
-      // event.preventDefault(); // If event is passed, prevent default
-    }
-
     const input = key.toLowerCase();
     const currentTarget = shuffledStrings[targetIndex] || "";
     const correctChar = currentTarget[correctIndex]?.toLowerCase();
-    
     setCountTyping((prev) => prev + 1);
-
     if (input === correctChar) {
       setCountCorrectTyping((prev) => prev + 1);
-      // 正解した文字が最後の文字か判定
       if (correctIndex + 1 === currentTarget.length) {
-        // 現在のお題が最後のお題か判定
         if (targetIndex + 1 === shuffledStrings.length) {
-          // すべて終了、結果画面へ
-          navigate("/results", {
-            state: {
-              totalInputs: countTyping + 1,
-              correctInputs: countCorrectTyping + 1,
-              elapsedTime: time,
-              isPractice: false,
-              roundInSession: roundInSession, // セッションのラウンド番号を渡す
-            },
-          });
+          handleRoundComplete();
         } else {
-          // 次のお題へ
           setTargetIndex((prev) => prev + 1);
           setCorrectIndex(0);
         }
       } else {
-        // 次の文字へ
         setCorrectIndex((prev) => prev + 1);
       }
     } else {
-      // ミスタイプ
       setShowBorder(true);
       if (soundRef.current) soundRef.current.playBeep();
     }
   };
 
-  // --- レンダリング ---
+  // ★★★★★ 修正点 ★★★★★
+  // キー入力時にタイプ音を再生する処理をここに追加しました。
+  const handleKeyDown = (event) => {
+    if (phase !== 'typing') return;
+    if (soundRef.current) {
+        soundRef.current.playSound();
+    }
+    processTyping(event.key);
+  };
   
-  // データの読み込み中やリダイレクト中は何も表示しない
   if (phase === "loading" || phase === "redirecting" || shuffledStrings.length === 0) {
     return null; 
   }
-
   const currentTargetText = shuffledStrings[targetIndex] || "";
 
   return (
@@ -183,9 +169,7 @@ export const Typing = () => {
             tabIndex={0}
             onKeyDown={handleKeyDown}
             style={{
-              outline: "none",
-              borderWidth: "5px",
-              borderStyle: "solid",
+              outline: "none", borderWidth: "5px", borderStyle: "solid",
               borderColor: showBorder ? "red" : "white",
               padding: 10, userSelect: "none", margin: "0 auto", maxWidth: "80vw",
             }}

@@ -93,7 +93,7 @@ export const Practice = () => {
 
   return (
     <div style={{ textAlign: "center", marginTop: 20 }}>
-      <Sound ref={soundRef} round={0}/>
+      <Sound ref={soundRef} round={5}/>
       {phase === "countdown" && (
         <Countdown
           startCount={3}

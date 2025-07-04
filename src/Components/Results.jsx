@@ -27,66 +27,64 @@ export const Results = () => {
   const { state } = useLocation();
   const navigate = useNavigate();
 
-  // stateがない場合はホームに戻る
-  // このロジックはフックのルールに従うためuseEffect内で処理
   useEffect(() => {
-    if (!state) {
+    if (!state?.finalResults) {
       navigate('/');
     }
   }, [state, navigate]);
 
-  // stateがない場合は、ここでレンダリングを中断
-  if (!state) {
-    return null; 
-  }
+  if (!state?.finalResults) return null; 
 
-  const { totalInputs, correctInputs, elapsedTime, isPractice, roundInSession } = state;
-  const accuracy = totalInputs ? ((correctInputs / totalInputs) * 100).toFixed(2) : 0;
-  const timeSeconds = (elapsedTime / 1000).toFixed(2);
+  const { finalResults } = state;
+
+  // 全ラウンドの合計値を計算
+  const totalStats = finalResults.reduce(
+    (acc, result) => {
+      acc.totalInputs += result.totalInputs;
+      acc.correctInputs += result.correctInputs;
+      acc.elapsedTime += result.elapsedTime;
+      return acc;
+    },
+    { totalInputs: 0, correctInputs: 0, elapsedTime: 0 }
+  );
   
-  // インポートしたallTypingStringsを使って最後のラウンドか判定
-  const isLastInSession = roundInSession >= allTypingStrings.length - 1;
+  const totalAccuracy = totalStats.totalInputs ? ((totalStats.correctInputs / totalStats.totalInputs) * 100).toFixed(2) : 0;
+  const totalTimeSeconds = (totalStats.elapsedTime / 1000).toFixed(2);
 
-  const handleNextRound = () => {
-    // インポートしたCURRENT_SESSION_KEYを使ってlocalStorageから読み込む
-    const currentSession = JSON.parse(localStorage.getItem(CURRENT_SESSION_KEY) || '[]');
-    if (currentSession.length === 0) {
-        navigate('/');
-        return;
-    }
-
-    const nextRoundInSession = roundInSession + 1;
-    const nextRoundIndex = currentSession[nextRoundInSession];
-
-    navigate("/Typing", {
-      state: {
-        roundIndex: nextRoundIndex,
-        roundInSession: nextRoundInSession,
-      },
-    });
-  };
 
   return (
-    <div style={{ textAlign: "center", marginTop: 40 }}>
-      <h1>{isPractice ? "Practice Results" : `Typing Test Results (Session Round ${roundInSession + 1})`}</h1>
-      <p>Total Inputs: {totalInputs}</p>
-      <p>Correct Inputs: {correctInputs}</p>
-      <p>Accuracy: {accuracy}%</p>
-      <p>Elapsed Time: {timeSeconds} seconds</p>
+    <div style={{ textAlign: "center", marginTop: 40, padding: '0 1rem' }}>
+      <h1>Final Results</h1>
       
-      {!isPractice && (
-        <>
-          {isLastInSession ? (
-            <Button variant="contained" onClick={() => navigate("/")} style={{ marginTop: 20 }}>
-              セッション完了！ホームに戻る
-            </Button>
-          ) : (
-            <Button variant="contained" onClick={handleNextRound} style={{ marginTop: 20 }}>
-              次のラウンドへ (Round {roundInSession + 2})
-            </Button>
-          )}
-        </>
-      )}
+      {/* 全ラウンドの合計結果 */}
+      <div style={{ border: '2px solid #2196f3', borderRadius: '8px', padding: '1rem', margin: '2rem auto', maxWidth: '500px' }}>
+        <h2>総合結果</h2>
+        <p>合計タイプ数: {totalStats.totalInputs}</p>
+        <p>合計正解タイプ数: {totalStats.correctInputs}</p>
+        <p>総合正解率: {totalAccuracy}%</p>
+        <p>合計時間: {totalTimeSeconds} 秒</p>
+      </div>
+
+      {/* 各ラウンドの結果 */}
+      <h2>各ラウンドの結果</h2>
+      <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', flexWrap: 'wrap' }}>
+        {finalResults.map((result, index) => {
+          const accuracy = result.totalInputs ? ((result.correctInputs / result.totalInputs) * 100).toFixed(2) : 0;
+          const timeSeconds = (result.elapsedTime / 1000).toFixed(2);
+          return (
+            <div key={index} style={{ border: '1px solid #ccc', borderRadius: '8px', padding: '1rem', minWidth: '200px' }}>
+              <h3>Round {result.roundNumber}</h3>
+              <p>タイプ数: {result.totalInputs}</p>
+              <p>正解率: {accuracy}%</p>
+              <p>時間: {timeSeconds} 秒</p>
+            </div>
+          );
+        })}
+      </div>
+
+      <Button variant="contained" onClick={() => navigate("/")} style={{ marginTop: '2rem' }}>
+        ホームに戻る
+      </Button>
     </div>
   );
 };
