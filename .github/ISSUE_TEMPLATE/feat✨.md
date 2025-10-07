@@ -1,11 +1,13 @@
 ---
 name: feat✨
-about: 'feat✨: [機能の概要を簡潔に記述]'
+about: feat✨
 title: ''
 labels: ''
 assignees: ''
 
 ---
+
+feat✨: [機能の概要を簡潔に記述]
 
 ### どんな機能？ (What)
 - 

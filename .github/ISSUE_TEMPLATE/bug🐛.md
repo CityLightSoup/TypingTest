@@ -1,11 +1,13 @@
 ---
 name: "bug\U0001F41B"
-about: "bug\U0001F41B: [バグの概要を簡潔に記述]"
+about: "bug\U0001F41B"
 title: ''
 labels: ''
 assignees: ''
 
 ---
+
+bug🐛: [バグの概要を簡潔に記述]
 
 ### 概要 (Overview)
 ### 再現手順 (Steps to Reproduce)
