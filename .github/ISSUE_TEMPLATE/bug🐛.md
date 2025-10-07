@@ -1,6 +1,6 @@
 ---
-name: "bug\U0001F41B: [バグの概要を簡潔に記述]"
-about: Describe this issue template's purpose here.
+name: "bug\U0001F41B"
+about: "bug\U0001F41B: [バグの概要を簡潔に記述]"
 title: ''
 labels: ''
 assignees: ''

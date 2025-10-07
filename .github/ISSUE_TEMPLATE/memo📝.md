@@ -1,6 +1,6 @@
 ---
-name: "memo\U0001F4DD: [メモの概要]"
-about: Describe this issue template's purpose here.
+name: "memo\U0001F4DD"
+about: "memo\U0001F4DD: [メモの概要]"
 title: ''
 labels: ''
 assignees: ''

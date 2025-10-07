@@ -1,6 +1,6 @@
 ---
-name: "fix\U0001F527: [改修内容の概要を記述]"
-about: Describe this issue template's purpose here.
+name: "fix\U0001F527"
+about: "fix\U0001F527: [改修内容の概要を記述]"
 title: ''
 labels: ''
 assignees: ''

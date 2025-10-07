@@ -1,6 +1,6 @@
 ---
-name: 'feat✨: [機能の概要を簡潔に記述]'
-about: Describe this issue template's purpose here.
+name: feat✨
+about: 'feat✨: [機能の概要を簡潔に記述]'
 title: ''
 labels: ''
 assignees: ''
