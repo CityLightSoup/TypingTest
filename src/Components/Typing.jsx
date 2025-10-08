@@ -57,7 +57,8 @@ export const Typing = () => {
       totalInputs: countTyping + 1,
       correctInputs: countCorrectTyping + 1,
       elapsedTime: time,
-      roundNumber: roundInSession + 1
+      roundNumber: roundInSession + 1,
+      soundType: roundIndex + 1
     };
     const newSessionResults = [...sessionResults, currentRoundResult];
     const isLastInSession = roundInSession >= allTypingStrings.length - 1;
