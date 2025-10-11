@@ -15,13 +15,14 @@ export const Wating = () => {
 
     if (!location.state) return null;
 
-    const { nextRoundIndex, nextRoundInSession, sessionResults } = location.state;
+    const { nextRoundIndex, nextRoundIndex2, nextRoundInSession, sessionResults } = location.state;
     const prevRoundNumber = nextRoundInSession; // 次が2なら前は1
 
     const handleStartNextRound = () => {
         navigate("/Typing", {
             state: {
                 roundIndex: nextRoundIndex,
+                roundIndex2: nextRoundIndex2,
                 roundInSession: nextRoundInSession,
                 sessionResults: sessionResults,
             },

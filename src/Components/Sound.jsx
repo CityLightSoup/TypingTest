@@ -22,26 +22,26 @@ import r2s6 from '../Sounds/keyS26.wav'
 import r2s7 from '../Sounds/keyS27.wav'
 import r2s8 from '../Sounds/keyS28.wav'
 import r2s9 from '../Sounds/keyS29.wav'
-import r3s0 from '../Sounds/keyR3.mp3' //効果音ラボ　カーソル移動12
-import r3s1 from '../Sounds/keyR3.mp3'
-import r3s2 from '../Sounds/keyR3.mp3'
-import r3s3 from '../Sounds/keyR3.mp3'
-import r3s4 from '../Sounds/keyR3.mp3'
-import r3s5 from '../Sounds/keyR3.mp3'
-import r3s6 from '../Sounds/keyR3.mp3'
-import r3s7 from '../Sounds/keyR3.mp3'
-import r3s8 from '../Sounds/keyR3.mp3'
-import r3s9 from '../Sounds/keyR3.mp3'
-import r4s0 from '../Sounds/keyR4.mp3' //効果音ラボ　カーソル移動9
-import r4s1 from '../Sounds/keyR4.mp3'
-import r4s2 from '../Sounds/keyR4.mp3'
-import r4s3 from '../Sounds/keyR4.mp3'
-import r4s4 from '../Sounds/keyR4.mp3'
-import r4s5 from '../Sounds/keyR4.mp3'
-import r4s6 from '../Sounds/keyR4.mp3'
-import r4s7 from '../Sounds/keyR4.mp3'
-import r4s8 from '../Sounds/keyR4.mp3'
-import r4s9 from '../Sounds/keyR4.mp3'
+// import r3s0 from '../Sounds/keyR3.mp3' //効果音ラボ　カーソル移動12
+// import r3s1 from '../Sounds/keyR3.mp3'
+// import r3s2 from '../Sounds/keyR3.mp3'
+// import r3s3 from '../Sounds/keyR3.mp3'
+// import r3s4 from '../Sounds/keyR3.mp3'
+// import r3s5 from '../Sounds/keyR3.mp3'
+// import r3s6 from '../Sounds/keyR3.mp3'
+// import r3s7 from '../Sounds/keyR3.mp3'
+// import r3s8 from '../Sounds/keyR3.mp3'
+// import r3s9 from '../Sounds/keyR3.mp3'
+// import r4s0 from '../Sounds/keyR4.mp3' //効果音ラボ　カーソル移動9
+// import r4s1 from '../Sounds/keyR4.mp3'
+// import r4s2 from '../Sounds/keyR4.mp3'
+// import r4s3 from '../Sounds/keyR4.mp3'
+// import r4s4 from '../Sounds/keyR4.mp3'
+// import r4s5 from '../Sounds/keyR4.mp3'
+// import r4s6 from '../Sounds/keyR4.mp3'
+// import r4s7 from '../Sounds/keyR4.mp3'
+// import r4s8 from '../Sounds/keyR4.mp3'
+// import r4s9 from '../Sounds/keyR4.mp3'
 import pras0 from '../Sounds/keyPractice.mp3' //効果音ラボ　カーソル移動1
 import beepSound from '../Sounds/beep.mp3'
 
@@ -67,34 +67,34 @@ export const Sound = forwardRef(({ round } , ref) => {
     const [play_r2s7] = useSound(r2s7, { volume: 0.2 });
     const [play_r2s8] = useSound(r2s8, { volume: 0.2 });
     const [play_r2s9] = useSound(r2s9, { volume: 0.2 });
-    const [play_r3s0] = useSound(r3s0, { volume: 0.2 });
-    const [play_r3s1] = useSound(r3s1, { volume: 0.2 });
-    const [play_r3s2] = useSound(r3s2, { volume: 0.2 });
-    const [play_r3s3] = useSound(r3s3, { volume: 0.2 });
-    const [play_r3s4] = useSound(r3s4, { volume: 0.2 });
-    const [play_r3s5] = useSound(r3s5, { volume: 0.2 });
-    const [play_r3s6] = useSound(r3s6, { volume: 0.2 });
-    const [play_r3s7] = useSound(r3s7, { volume: 0.2 });
-    const [play_r3s8] = useSound(r3s8, { volume: 0.2 });
-    const [play_r3s9] = useSound(r3s9, { volume: 0.2 });
-    const [play_r4s0] = useSound(r4s0, { volume: 0.2 });
-    const [play_r4s1] = useSound(r4s1, { volume: 0.2 });
-    const [play_r4s2] = useSound(r4s2, { volume: 0.2 });
-    const [play_r4s3] = useSound(r4s3, { volume: 0.2 });
-    const [play_r4s4] = useSound(r4s4, { volume: 0.2 });
-    const [play_r4s5] = useSound(r4s5, { volume: 0.2 });
-    const [play_r4s6] = useSound(r4s6, { volume: 0.2 });
-    const [play_r4s7] = useSound(r4s7, { volume: 0.2 });
-    const [play_r4s8] = useSound(r4s8, { volume: 0.2 });
-    const [play_r4s9] = useSound(r4s9, { volume: 0.2 });
+    // const [play_r3s0] = useSound(r3s0, { volume: 0.2 });
+    // const [play_r3s1] = useSound(r3s1, { volume: 0.2 });
+    // const [play_r3s2] = useSound(r3s2, { volume: 0.2 });
+    // const [play_r3s3] = useSound(r3s3, { volume: 0.2 });
+    // const [play_r3s4] = useSound(r3s4, { volume: 0.2 });
+    // const [play_r3s5] = useSound(r3s5, { volume: 0.2 });
+    // const [play_r3s6] = useSound(r3s6, { volume: 0.2 });
+    // const [play_r3s7] = useSound(r3s7, { volume: 0.2 });
+    // const [play_r3s8] = useSound(r3s8, { volume: 0.2 });
+    // const [play_r3s9] = useSound(r3s9, { volume: 0.2 });
+    // const [play_r4s0] = useSound(r4s0, { volume: 0.2 });
+    // const [play_r4s1] = useSound(r4s1, { volume: 0.2 });
+    // const [play_r4s2] = useSound(r4s2, { volume: 0.2 });
+    // const [play_r4s3] = useSound(r4s3, { volume: 0.2 });
+    // const [play_r4s4] = useSound(r4s4, { volume: 0.2 });
+    // const [play_r4s5] = useSound(r4s5, { volume: 0.2 });
+    // const [play_r4s6] = useSound(r4s6, { volume: 0.2 });
+    // const [play_r4s7] = useSound(r4s7, { volume: 0.2 });
+    // const [play_r4s8] = useSound(r4s8, { volume: 0.2 });
+    // const [play_r4s9] = useSound(r4s9, { volume: 0.2 });
     const [playPractice] = useSound(pras0, { volume: 0.2 });
     const [playBeep] = useSound(beepSound, { volume: 0.2 });
 
     const soundPlayersPerRound = {
         1: [play_r1s0, play_r1s1, play_r1s2, play_r1s3, play_r1s4, play_r1s5, play_r1s6, play_r1s7, play_r1s8, play_r1s9],
         2: [play_r2s0, play_r2s1, play_r2s2, play_r2s3, play_r2s4, play_r2s5, play_r2s6, play_r2s7, play_r2s8, play_r2s9],
-        3: [play_r3s0, play_r3s1, play_r3s2, play_r3s3, play_r3s4, play_r3s5, play_r3s6, play_r3s7, play_r3s8, play_r3s9],
-        4: [play_r4s0, play_r4s1, play_r4s2, play_r4s3, play_r4s4, play_r4s5, play_r4s6, play_r4s7, play_r4s8, play_r4s9],
+        // 3: [play_r3s0, play_r3s1, play_r3s2, play_r3s3, play_r3s4, play_r3s5, play_r3s6, play_r3s7, play_r3s8, play_r3s9],
+        // 4: [play_r4s0, play_r4s1, play_r4s2, play_r4s3, play_r4s4, play_r4s5, play_r4s6, play_r4s7, play_r4s8, play_r4s9],
     }
 
 

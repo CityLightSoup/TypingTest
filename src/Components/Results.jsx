@@ -78,6 +78,7 @@ export const Results = () => {
               <p>正解率: {accuracy}%</p>
               <p>時間: {timeSeconds} 秒</p>
               <p style={{ color: '#555', fontSize: '0.9em' }}>サウンドタイプ: {result.soundType}</p>
+              <p style={{ color: '#555', fontSize: '0.9em' }}>文章タイプ: {result.stringsType}</p>
             </div>
           );
         })}

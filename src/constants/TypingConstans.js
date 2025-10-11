@@ -105,6 +105,8 @@ export const allTypingStrings = [
 // localStorageのキー
 export const PERMUTATION_SET_KEY = 'typingPermutationSet';
 export const CURRENT_SESSION_KEY = 'typingCurrentSession';
+export const PERMUTATION_SET_KEY2 = 'typingPermutatonSet2';
+export const CURRENT_SESSION_KEY2 = 'typingCurrentSession2';
 
 // 総組み合わせ数 (順列生成関数もこちらに移動して計算)
 const generatePermutations = (arr) => {

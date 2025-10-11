@@ -1,14 +1,10 @@
-/*
-  Typing.jsx (修正版)
-  - キー入力時にタイプ音を再生する処理を`handleKeyDown`関数に追加しました。
-*/
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import { Countdown } from './Countdown';
 import { Sound } from './Sound';
 import { Stopwatch } from './Stopwatch';
-import { allTypingStrings, CURRENT_SESSION_KEY } from '../constants/TypingConstans';
+import { allTypingStrings, CURRENT_SESSION_KEY, CURRENT_SESSION_KEY2 } from '../constants/TypingConstans';
 
 // --- Mock Dependencies for Canvas Environment ---
 const shuffleArray = (array) => [...array].sort(() => Math.random() - 0.5);
@@ -31,17 +27,18 @@ export const Typing = () => {
   const soundRef = useRef(null);
   
   const roundIndex = location.state?.roundIndex;
+  const roundIndex2 = location.state?.roundIndex2;
   const roundInSession = location.state?.roundInSession;
   const sessionResults = location.state?.sessionResults || [];
 
   useEffect(() => {
-    if (roundIndex === undefined || roundInSession === undefined) {
+    if (roundIndex === undefined || roundInSession === undefined || roundIndex2 === undefined) {
       setPhase("redirecting");
       navigate('/');
       return;
     }
     
-    const selectedTypingStrings = allTypingStrings[roundIndex];
+    const selectedTypingStrings = allTypingStrings[roundIndex2];
     setShuffledStrings(shuffleArray(selectedTypingStrings));
     setTargetIndex(0);
     setCorrectIndex(0);
@@ -50,31 +47,39 @@ export const Typing = () => {
     setTime(0);
     setIsTyping(false);
     setPhase("countdown");
-  }, [roundIndex, roundInSession, navigate]);
+  }, [roundIndex, roundIndex2, roundInSession, navigate]);
 
+  //タイピングが終わった時の処理
   const handleRoundComplete = useCallback(() => {
     const currentRoundResult = {
       totalInputs: countTyping + 1,
       correctInputs: countCorrectTyping + 1,
       elapsedTime: time,
       roundNumber: roundInSession + 1,
-      soundType: roundIndex + 1
+      soundType: roundIndex + 1,
+      stringsType: roundIndex2 + 1
     };
     const newSessionResults = [...sessionResults, currentRoundResult];
     const isLastInSession = roundInSession >= allTypingStrings.length - 1;
 
+    //3回目が終わったときはリザルト画面に遷移
     if (isLastInSession) {
       navigate("/results", {
         state: { finalResults: newSessionResults },
       });
-    } else {
+    } else {//1, 2回目が終わった時
+      //サウンド用
       const currentSession = JSON.parse(localStorage.getItem(CURRENT_SESSION_KEY) || '[]');
       const nextRoundInSession = roundInSession + 1;
       const nextRoundIndex = currentSession[nextRoundInSession];
+      //文章用
+      const currentSession2 = JSON.parse(localStorage.getItem(CURRENT_SESSION_KEY2) || '[]');
+      const nextRoundIndex2 = currentSession2[nextRoundInSession];
 
       navigate("/Wating", { // NOTE: Waiting画面のパスはご自身のルーティングに合わせてください
         state: {
           nextRoundIndex: nextRoundIndex,
+          nextRoundIndex2: nextRoundIndex2,
           nextRoundInSession: nextRoundInSession,
           sessionResults: newSessionResults,
         },
@@ -132,8 +137,7 @@ export const Typing = () => {
     }
   };
 
-  // ★★★★★ 修正点 ★★★★★
-  // キー入力時にタイプ音を再生する処理をここに追加しました。
+
   const handleKeyDown = (event) => {
     if (phase !== 'typing') return;
     if (soundRef.current) {
@@ -162,6 +166,7 @@ export const Typing = () => {
       {phase === 'typing' && (
         <>
           <h1>Typing Test - Session Round {roundInSession + 1} / {allTypingStrings.length}</h1>
+        
           <p style={{ fontSize: 20, marginBottom: 10 }}>
             {targetIndex + 1} / {shuffledStrings.length}問目
           </p>

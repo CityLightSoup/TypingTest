@@ -9,6 +9,8 @@ import {
   allTypingStrings,
   PERMUTATION_SET_KEY,
   CURRENT_SESSION_KEY,
+  PERMUTATION_SET_KEY2,
+  CURRENT_SESSION_KEY2,
   TOTAL_PERMUTATIONS
 } from '../constants/TypingConstans.js'
 
@@ -29,19 +31,38 @@ export const Home = () => {
   };
 
   const handleTypingStart = () => {
+    //サウンド用
     let permutationSet = JSON.parse(localStorage.getItem(PERMUTATION_SET_KEY) || '[]');
     if (permutationSet.length === 0) {
-      // generatePermutations と shuffleArray を使う
+      // generatePermutations と shuffleArray を使う。サウンド用
       const roundIndexes = Array.from(Array(allTypingStrings.length).keys());
       const newPermutations = generatePermutations(roundIndexes);
       permutationSet = shuffleArray(newPermutations);
     }
+
     const currentSession = permutationSet.pop();
     localStorage.setItem(PERMUTATION_SET_KEY, JSON.stringify(permutationSet));
     localStorage.setItem(CURRENT_SESSION_KEY, JSON.stringify(currentSession));
+    
+    //文章用
+    let permutationSet2 = JSON.parse(localStorage.getItem(PERMUTATION_SET_KEY2) || '[]');
+    if( permutationSet2.length === 0) {
+      const roundIndexes2 = Array.from(Array(allTypingStrings.length).keys());
+      const newPermutations2 = generatePermutations(roundIndexes2);
+      permutationSet2 = shuffleArray(newPermutations2);
+    }
+
+    const currentSession2 = permutationSet2.pop();
+    localStorage.setItem(PERMUTATION_SET_KEY2, JSON.stringify(permutationSet2));
+    localStorage.setItem(CURRENT_SESSION_KEY2, JSON.stringify(currentSession2));
+    currentSession.forEach(num => {
+      console.log(num);
+    });
+
     navigate("/Typing", { 
         state: { 
             roundIndex: currentSession[0], 
+            roundIndex2: currentSession2[0],
             roundInSession: 0,
             sessionResults: [] // 結果を蓄積する配列
         } 
@@ -64,7 +85,7 @@ export const Home = () => {
       <Button variant="contained" onClick={handlePractice} style={{ marginRight: '1rem' }}>
         練習
       </Button>
-      <Button variant="outlined" onClick={handleTypingStart}>
+      <Button variant="outlined" onClick={handleTypingStart}>      
         本番 ({completedInSet + 1}回目)
       </Button>
       <Button variant="text" color="error" onClick={handleReset} size="small">
