@@ -7,35 +7,35 @@ import Button from "@mui/material/Button";
 
 const practiceStrings = [
   "dormitory doors are locked at midnight",
-"work hard to reach the summit",
-"the imagination of the nation",
-"a coupon for a free sample",
-"my bank account is overdrawn",
-"parking tickets can be challenged",
-"the picket line gives me the chills",
-"a very traditional way to dress",
-"my car always breaks in the winter",
-"dinosaurs have been extinct for ages",
-"the power of denial",
-"the algorithm is too complicated",
-"shall we play a round of cards",
-"traveling to conferences is fun",
-"electric cars need big fuel cells",
-"we have enough witnesses",
-"a much higher risk of getting cancer",
-"the coronation was very exciting",
-"you must make an appointment",
-"drove my chevy to the levee",
-"nothing wrong with his style",
-"faster than a speeding bullet",
-"is there any indication of this",
-"gun powder must be handled with care",
-"a good response to the question",
-"mystery of the lost lagoon",
-"no more war no more bloodshed",
-"all together in one big pile",
-"they love to yap about nothing",
-"buckle up for safety"
+  "work hard to reach the summit",
+  "the imagination of the nation",
+  "a coupon for a free sample",
+  "my bank account is overdrawn",
+  "parking tickets can be challenged",
+  "the picket line gives me the chills",
+  "a very traditional way to dress",
+  "my car always breaks in the winter",
+  "dinosaurs have been extinct for ages",
+  "the power of denial",
+  "the algorithm is too complicated",
+  "shall we play a round of cards",
+  "traveling to conferences is fun",
+  "electric cars need big fuel cells",
+  "we have enough witnesses",
+  "a much higher risk of getting cancer",
+  "the coronation was very exciting",
+  "you must make an appointment",
+  "drove my chevy to the levee",
+  "nothing wrong with his style",
+  "faster than a speeding bullet",
+  "is there any indication of this",
+  "gun powder must be handled with care",
+  "a good response to the question",
+  "mystery of the lost lagoon",
+  "no more war no more bloodshed",
+  "all together in one big pile",
+  "they love to yap about nothing",
+  "buckle up for safety",
 ];
 
 export const Practice = () => {
@@ -118,7 +118,7 @@ export const Practice = () => {
 
   return (
     <div style={{ textAlign: "center", marginTop: 20 }}>
-      <Sound ref={soundRef} round={5}/>
+      <Sound ref={soundRef} round={5} />
       {phase === "countdown" && (
         <Countdown
           startCount={3}
