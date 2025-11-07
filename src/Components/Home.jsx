@@ -86,7 +86,7 @@ export const Home = () => {
   // JSX内のロジックは変更なし
   return (
     <div style={{ textAlign: "center", marginTop: 40 }}>
-      <h1>Typing</h1>
+      <h1>Typing Test</h1>
 
       <Button
         variant="contained"
